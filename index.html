@@ -185,7 +185,7 @@
     <div id="iframe-overlay">
         <div id="iframe-header">
             <span id="tool-title" style="font-weight: bold; letter-spacing: 1px; color: var(--secondary-accent);">SYSTEM TERMINAL // LOADING...</span>
-            <button class="close-btn" onclick="closeTool()">CLOSE TERMINAL [ESC]</button>
+            <button class="close-btn" onclick="closeTool()">退出 [ESC]</button>
         </div>
         <iframe id="iframe-container" src=""></iframe>
     </div>
@@ -201,7 +201,7 @@
         </header>
 
         <main class="bento-grid">
-            <div class="tool-card large" onclick="openTool('https://wb.unwedomain.xyz/', 'WB Quantifier')">
+            <div class="tool-card large" onclick="openTool('https://wb.unwedomain.xyz/', 'WB 条带定量助手')">
                 <div>
                     <div class="icon-box">📊</div>
                     <h3>WB 条带定量助手</h3>
@@ -210,7 +210,7 @@
                 <div class="tag">专注条带定量</div>
             </div>
 
-            <div class="tool-card" onclick="openTool('https://qpcr-plate-designer.unwedomain.xyz/', 'qPCR Plate Architect')">
+            <div class="tool-card" onclick="openTool('https://qpcr-plate-designer.unwedomain.xyz/', 'qPCR 布板工具')">
                 <div>
                     <div class="icon-box">🧬</div>
                     <h3>qPCR高效排版助手</h3>
@@ -219,7 +219,7 @@
                 <div class="tag">快速排版</div>
             </div>
 
-            <div class="tool-card" onclick="openTool('https://qpcr.unwedomain.xyz/', 'qRT-PCR Analysis')">
+            <div class="tool-card" onclick="openTool('https://qpcr.unwedomain.xyz/', 'qPCR 表达分析工具')">
                 <div>
                     <div class="icon-box">📈</div>
                     <h3>qPCR数据分析助手 </h3>
@@ -240,7 +240,7 @@
         const title = document.getElementById('tool-title');
 
         function openTool(url, toolName) {
-            title.innerText = toolName.toUpperCase() + " // INITIALIZING SESSION...";
+            title.innerText = toolName.toUpperCase() + " // 进行中...";
             container.src = url;
             overlay.style.display = 'flex';
             document.body.style.overflow = 'hidden';
