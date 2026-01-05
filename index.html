@@ -1,207 +1,157 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-D97WVXEY1P"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-D97WVXEY1P');
-</script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CyanHelix Terminal | 实验室数字化终端</title>
     <link rel="icon" type="image/png" href="favicon.png">
-
-<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" href="logo.png">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
 
         :root {
-            --bg-color: #020617;
-            --glass-bg: rgba(15, 23, 42, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --primary-accent: #3b82f6;
-            --secondary-accent: #10b981;
-            --text-main: #f8fafc;
+            --bg-color: #040d12;
+            --glass-bg: rgba(6, 22, 28, 0.8);
+            --glass-border: rgba(34, 211, 238, 0.15);
+            --primary-accent: #06b6d4;
+            --secondary-accent: #22d3ee;
+            --text-main: #ecfeff;
             --text-dim: #94a3b8;
         }
 
         * { box-sizing: border-box; }
 
         body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Inter', sans-serif;
-    background-color: #040d12;
-    /* 核心修改：使用本地背景图，叠加深色渐变滤镜 */
-    background-image: 
-        linear-gradient(rgba(4, 13, 18, 0.8), rgba(4, 13, 18, 0.9)),
-        url('bg-dark.png'); /* 如果你放在 assets 文件夹，则写 assets/bg-dark.png */
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    color: var(--text-main);
-    min-height: 100vh;
-    overflow-x: hidden;
-}
-
-        /* 1. 动态弥散背景层 */
-        .ambient-container {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            overflow: hidden;
-            pointer-events: none;
-        }
-
-        .grid-layer {
-            position: absolute;
-            inset: 0;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
             background-image: 
-                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), 
-                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            mask-image: radial-gradient(circle at 50% 50%, black, transparent 90%);
+                linear-gradient(rgba(4, 13, 18, 0.85), rgba(4, 13, 18, 0.95)),
+                url('bg-dark.png'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        .flare {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(120px);
-            mix-blend-mode: screen;
-            opacity: 0.5;
-            animation: moveFlare 20s infinite alternate ease-in-out;
-        }
+        /* 动态背景装饰 */
+        .ambient-container { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+        .grid-layer { position: absolute; inset: 0; background-image: linear-gradient(rgba(34,211,238,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.03) 1px, transparent 1px); background-size: 50px 50px; }
+        .flare { position: absolute; border-radius: 50%; filter: blur(120px); mix-blend-mode: screen; opacity: 0.4; animation: moveFlare 20s infinite alternate ease-in-out; }
+        .flare-1 { top: -10%; left: -10%; width: 60vw; height: 60vw; background: radial-gradient(circle, #083344 0%, transparent 70%); }
+        .flare-2 { bottom: -15%; right: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, #0e7490 0%, transparent 70%); animation-delay: -5s; }
 
-        .flare-blue { top: -10%; left: -10%; width: 60vw; height: 60vw; background: radial-gradient(circle, #1e40af 0%, transparent 70%); }
-        .flare-cyan { bottom: -15%; right: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, #0d9488 0%, transparent 70%); animation-delay: -5s; }
-        .flare-purple { top: 40%; right: 15%; width: 30vw; height: 30vw; background: radial-gradient(circle, #581c87 0%, transparent 70%); }
+        @keyframes moveFlare { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(150px, 100px) scale(1.2); } }
 
-        @keyframes moveFlare {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(150px, 100px) scale(1.2); }
-        }
+        .top-glow { height: 2px; background: linear-gradient(90deg, transparent, var(--primary-accent), transparent); opacity: 0.5; }
 
-        /* 2. 页面布局 */
-        .top-glow { height: 2px; background: linear-gradient(90deg, transparent, var(--primary-accent), var(--secondary-accent), transparent); opacity: 0.5; }
-
-        .content-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 5rem 2rem;
-        }
+        .content-wrapper { max-width: 1200px; margin: 0 auto; padding: 5rem 2rem; }
 
         header { margin-bottom: 4rem; }
-        header h1 { font-size: 3rem; font-weight: 800; margin: 0; letter-spacing: -1.5px; background: linear-gradient(to bottom right, #ffffff 30%, #64748b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .header-main { display: flex; align-items: center; gap: 25px; }
+        .logo-img { height: 80px; filter: drop-shadow(0 0 15px rgba(6,182,212,0.5)); }
+        header h1 { font-size: 3rem; font-weight: 800; margin: 0; letter-spacing: -1.5px; background: linear-gradient(to bottom right, #ffffff, var(--primary-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         header p { color: var(--text-dim); font-size: 1.1rem; margin-top: 15px; }
 
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-auto-rows: 240px;
-            gap: 1.5rem;
-        }
-
-        .tool-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 30px;
-            padding: 2.5rem;
-            text-decoration: none;
-            color: inherit;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-            cursor: pointer;
-        }
-
-        .tool-card:hover { transform: translateY(-10px); border-color: rgba(59, 130, 246, 0.4); box-shadow: 0 20px 40px rgba(0,0,0,0.3); background: rgba(30, 41, 59, 0.8); }
-
-        /* 突出显示的大卡片 */
+        /* Bento Grid 布局 */
+        .bento-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 240px; gap: 1.5rem; }
+        .tool-card { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 30px; padding: 2.5rem; text-decoration: none; color: inherit; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1); cursor: pointer; }
+        .tool-card:hover { transform: translateY(-10px); border-color: var(--primary-accent); box-shadow: 0 0 40px rgba(6, 182, 212, 0.2); background: rgba(8, 51, 68, 0.7); }
         .large { grid-column: span 2; }
-
-        .icon-box { width: 56px; height: 56px; background: rgba(255, 255, 255, 0.05); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin-bottom: 1.5rem; border: 1px solid rgba(255, 255, 255, 0.1); }
-
-        .tool-card h3 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
+        .icon-box { width: 56px; height: 56px; background: rgba(34, 211, 238, 0.05); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin-bottom: 1.5rem; border: 1px solid var(--glass-border); }
+        .tool-card h3 { margin: 0; font-size: 1.5rem; font-weight: 700; }
         .tool-card p { color: var(--text-dim); font-size: 0.95rem; line-height: 1.6; margin: 0.8rem 0; }
+        .tag { font-size: 0.7rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; padding: 4px 12px; border-radius: 100px; background: rgba(34, 211, 238, 0.1); color: var(--secondary-accent); width: fit-content; }
+        .info-card { background: rgba(6, 22, 28, 0.4); }
 
-        .tag { font-size: 0.7rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; padding: 4px 12px; border-radius: 100px; background: rgba(59, 130, 246, 0.15); color: var(--primary-accent); width: fit-content; }
-        .tag-green { background: rgba(16, 185, 129, 0.15); color: var(--secondary-accent); }
-
-        /* 3. 内嵌 Iframe 模态框样式 */
-        #iframe-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(2, 6, 23, 0.9);
-            backdrop-filter: blur(20px);
-            z-index: 1000;
-            display: none;
-            flex-direction: column;
-            animation: fadeIn 0.4s ease;
-        }
-
-        #iframe-header {
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.05);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
+        /* 模态框叠加层 */
+        #iframe-overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.95); backdrop-filter: blur(20px); z-index: 1000; display: none; flex-direction: column; animation: fadeIn 0.4s ease; }
+        #iframe-header { padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; background: rgba(8, 51, 68, 0.5); border-bottom: 1px solid var(--glass-border); }
         #iframe-container { flex: 1; width: 100%; border: none; background: white; }
+        #text-content-layer { flex: 1; overflow-y: auto; padding: 3rem 2rem; display: none; }
+        
+        /* Markdown 样式增强 */
+        .markdown-body { max-width: 850px; margin: 0 auto; color: #ecfeff; line-height: 1.8; }
+        .markdown-body h2 { color: var(--primary-accent); border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; margin-top: 30px; }
+        .markdown-body hr { border: 0; border-top: 1px solid var(--glass-border); margin: 30px 0; }
 
-        .close-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s;
+        /* --- 新增：折叠框样式 --- */
+        .markdown-body details {
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 12px 18px;
+            margin-bottom: 15px;
+            background: rgba(34, 211, 238, 0.03);
+            transition: all 0.3s ease;
         }
-        .close-btn:hover { background: #ef4444; border-color: transparent; }
+        .markdown-body details[open] {
+            background: rgba(34, 211, 238, 0.08);
+            border-color: var(--primary-accent);
+        }
+        .markdown-body summary {
+            font-weight: 700;
+            color: var(--secondary-accent);
+            cursor: pointer;
+            outline: none;
+            font-size: 1.1rem;
+            list-style: none; /* 隐藏某些浏览器的默认箭头 */
+        }
+        .markdown-body summary:hover { color: white; text-shadow: 0 0 10px var(--primary-accent); }
+        .markdown-body summary::-webkit-details-marker { display: none; } /* 隐藏 Chrome 箭头 */
+        .markdown-body summary::before { content: '▶'; display: inline-block; margin-right: 10px; font-size: 0.8rem; transition: transform 0.2s; }
+        .markdown-body details[open] summary::before { transform: rotate(90deg); color: var(--primary-accent); }
+
+        /* 赞赏功能 */
+        .donate-trigger { background: transparent; border: 1px solid var(--primary-accent); color: var(--primary-accent); padding: 8px 20px; border-radius: 50px; cursor: pointer; font-weight: 600; margin: 1.5rem 0; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px; }
+        .donate-trigger:hover { background: var(--primary-accent); color: white; box-shadow: 0 0 15px rgba(6, 182, 212, 0.4); }
+        #donate-area { display: none; text-align: center; margin: 1.5rem auto; padding: 1.5rem; background: rgba(255, 255, 255, 0.03); border: 1px dashed var(--glass-border); border-radius: 20px; animation: fadeInScale 0.4s ease-out; }
+        #donate-area img { width: 200px; height: 200px; border-radius: 12px; border: 4px solid white; background: white; margin-bottom: 10px; }
+        @keyframes fadeInScale { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        .close-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .close-btn:hover { background: #ef4444; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
         footer { margin-top: 8rem; text-align: center; color: var(--text-dim); font-size: 0.85rem; letter-spacing: 1px; }
+
+        @media (max-width: 900px) { .bento-grid { grid-template-columns: 1fr; grid-auto-rows: auto; } .large { grid-column: span 1; } }
     </style>
 </head>
 <body>
 
     <div class="ambient-container">
         <div class="grid-layer"></div>
-        <div class="flare flare-blue"></div>
-        <div class="flare flare-cyan"></div>
-        <div class="flare flare-purple"></div>
+        <div class="flare flare-1"></div>
+        <div class="flare flare-2"></div>
     </div>
 
     <div class="top-glow"></div>
 
     <div id="iframe-overlay">
         <div id="iframe-header">
-            <span id="tool-title" style="font-weight: bold; letter-spacing: 1px; color: var(--secondary-accent);">SYSTEM TERMINAL // LOADING...</span>
+            <span id="tool-title" style="font-weight: bold; letter-spacing: 1px; color: var(--secondary-accent);">TERMINAL // LOADING...</span>
             <button class="close-btn" onclick="closeTool()">退出 [ESC]</button>
         </div>
         <iframe id="iframe-container" src=""></iframe>
+        <div id="text-content-layer">
+            <div id="inner-markdown-content" class="markdown-body"></div>
+        </div>
     </div>
 
     <div class="content-wrapper">
         <header>
-            <div class="header-main" style="display: flex; align-items: center; gap: 20px;">
-        <img src="logo.png" alt="CyanHelix Logo" style="height: 80px; filter: drop-shadow(0 0 15px rgba(6,182,212,0.5));">
-        
-        <div>
-            <h1 style="margin: 0;">CyanHelix <span style="color: var(--primary-accent);">Terminal</span></h1>
-            <p>基于数字化的实验室高效终端，专注于蛋白印迹定量与 PCR 数据自动化分析。</p>
+            <div class="header-main">
+                <img src="logo.png" alt="CyanHelix Logo" class="logo-img">
+                <div>
+                    <h1>CyanHelix <span style="color: var(--primary-accent);">Terminal</span></h1>
+                    <p>基于数字化的实验室高效终端，专注于蛋白印迹定量与 PCR 数据自动化分析。</p>
+                </div>
+            </div>
         </header>
 
         <main class="bento-grid">
@@ -217,8 +167,8 @@
             <div class="tool-card" onclick="openTool('https://qpcr-plate-designer.unwedomain.xyz/', 'qPCR 布板工具')">
                 <div>
                     <div class="icon-box">🧬</div>
-                    <h3>qPCR高效排版助手</h3>
-                    <p>自动化 96孔板排布规划器，自动计算体系组分，高效规避手工排板误差。</p>
+                    <h3>qPCR 高效排版助手</h3>
+                    <p>自动化 96孔板排布规划器，自动计算体系组分，高效规避手工布板误差。</p>
                 </div>
                 <div class="tag">快速排版</div>
             </div>
@@ -226,10 +176,28 @@
             <div class="tool-card" onclick="openTool('https://qpcr.unwedomain.xyz/', 'qPCR 表达分析工具')">
                 <div>
                     <div class="icon-box">📈</div>
-                    <h3>qPCR数据分析助手 </h3>
+                    <h3>qPCR 数据分析助手</h3>
                     <p>Ct 值快速计算与标准化分析系统，支持多内参校准。</p>
                 </div>
-                <div class="tag tag-green">即时计算相对表达</div>
+                <div class="tag tag-green">即时计算</div>
+            </div>
+
+            <div class="tool-card info-card" onclick="showInfo('manual')">
+                <div>
+                    <div class="icon-box" style="font-size: 1.2rem; width: 44px; height: 44px;">📖</div>
+                    <h3>使用说明</h3>
+                    <p>快速上手指南：点击查看各个核心模块的详细操作步骤。</p>
+                </div>
+                <div class="tag">GUIDE</div>
+            </div>
+
+            <div class="tool-card info-card" onclick="showInfo('about')">
+                <div>
+                    <div class="icon-box" style="font-size: 1.2rem; width: 44px; height: 44px;">👤</div>
+                    <h3>关于本站</h3>
+                    <p>了解 CyanHelix Terminal 的开发初衷与技术架构。</p>
+                </div>
+                <div class="tag">ABOUT</div>
             </div>
         </main>
 
@@ -241,19 +209,319 @@
     <script>
         const overlay = document.getElementById('iframe-overlay');
         const container = document.getElementById('iframe-container');
+        const textLayer = document.getElementById('text-content-layer');
+        const innerContent = document.getElementById('inner-markdown-content');
         const title = document.getElementById('tool-title');
 
+        const siteData = {
+            about: {
+                title: "ABOUT // 关于本站",
+                content: `
+## 项目背景
+**CyanHelix Terminal** 是一个本人在闲暇时间利用AI工具开发的开源项目， 旨在为细胞及分子生物学实验提供高效、便捷的数字化工具，涵盖蛋白印迹定量与 qPCR 数据分析等核心需求。未来将加入更多实验室工具，助力科研人员提升实验效率。如果对您有些许的帮助，欢迎分享给更多朋友。如有建议或合作意向，欢迎联系shuangzhang318@gmail.com。
+
+---
+
+### 🍵 支持作者
+本工具面对生物/医学研究生承诺在运营期间保持免费且没有功能限制，如涉及盈利或者是实力雄厚的朋友，欢迎支持。
+
+<button class="donate-trigger" onclick="toggleDonate()">
+    <span>🥤 请作者喝瓶快乐水</span>
+</button>
+
+<div id="donate-area">
+    <img src="donate.png" alt="赞赏码">
+    <p style="font-size: 0.8rem; opacity: 0.7;">感谢您的认可与支持</p>
+</div>
+
+---
+
+## 技术支持
+- **代码管理**：GitHub`
+            },
+            manual: {
+                title: "MANUAL // 使用指南",
+                content: `
+# 🧬 模块操作详解
+点击下方标题展开具体步骤：
+
+<details>
+<summary>📊 1. WB 条带定量助手</summary>
+
+🚀 WB 蛋白定量助手 Pro 快速上手指南
+
+欢迎使用 WB 条带定量助手。本工具专为生物医学实验室设计，旨在通过简单的点击和拖拽，快速完成 Western Blot 条带的灰度分析与下一次实验上样量的计算。
+
+📂 第一步：图像准备与上传
+
+1. 推荐图像规格
+
+格式：支持 .jpg, .png 以及科研常用的 .tif/.tiff 格式。
+
+分辨率：已针对 600 DPI 高清扫描件优化。
+
+位深：支持 8-bit（最常用）图像。
+
+建议：如果某些特定的 TIF 文件因特殊的科学编码无法打开，请先用 ImageJ 另存为标准 PNG 格式。
+
+2. 执行上传
+
+点击界面右上角的 “上传图片” 按钮。上传成功后，图像将自动适应屏幕宽度显示。
+
+🛠️ 第二步：图像预处理（可选）
+
+如果原始图像过暗或对比度不足，可以使用顶部的工具栏：
+
+亮度/对比度：左右滑动滑块。这仅改变显示效果，帮助你更看清弱条带，不会影响底层的灰度计算精度。
+
+缩放控制：使用 + / - 按钮或百分比显示，放大图像以进行精确框选。
+
+🧪 第三步：背景扣除（核心步骤）
+
+在定量任何样品前，必须先扣除背景，否则计算结果将包含膜的底色噪音。
+
+在图像的空白区域（没有条带的地方）点击并拖拽鼠标，画出一个选框。
+
+点击该选框，使其处于蓝色激活状态。
+
+点击画布顶部的蓝色按钮 【设为背景】。
+
+此时该选框会变为黄色虚线，右侧面板会显示为“背景对照”。
+
+📊 第四步：条带框选与分析
+
+1. 框选样品
+
+手动绘制：在条带位置拖拽鼠标即可创建新选区。
+
+放大镜辅助：拖拽或缩放时，左上角会自动弹出 2x 实时放大镜，帮助你对齐条带边缘。
+
+固定尺寸模式：如果你希望所有选框大小完全一致（科学严谨性要求），请勾选右侧的 “固定尺寸”，并输入具体的宽度和高度像素值。
+
+2. 调整选区
+
+移动：点击选框中心并拖拽。
+
+缩放：点击选框的四个角进行拉伸（已优化防误触，点击中心不会意外触发缩放）。
+
+删除：点击选框右上角的红色垃圾桶图标。
+
+3. 面积同步
+
+如果你手动画了多个大小不一的框，可以点击右侧底部的 【选区面积一键同步】，系统会将所有框的大小统一调整为基准框的尺寸。
+
+🔢 第五步：定量计算逻辑
+
+1. 设定基准 (Reference)
+
+通常我们需要将一组实验中的“内参”或“对照组”设为 1。
+
+点击目标条带，在右侧面板点击 【设为基准】。该条带将变为绿色。
+
+2. 输入当前上样量
+
+在右侧面板的 “本次上样 (μL)” 输入框中，填写你这次实验实际加入孔内的体积。
+
+3. 查看建议
+
+系统会根据以下公式自动计算：
+建议下回上样量 = 本次上样量 * (目标强度 / 当前强度)
+
+基准模式：使所有条带的强度最终与“基准样品”对齐。
+
+定值模式：点击底部切换到定值模式，输入一个目标强度值（如 100），使所有条带向该数值对齐。
+
+💾 第六步：导出报告
+
+分析完成后，点击右侧最下方的黑色按钮 【导出数据报表 (CSV)】。
+
+系统将生成一个 Excel 可打开的文件。
+
+包含：样品序号、平均灰度、扣背景后的净强度、建议上样量等关键科研数据。
+
+💡 小贴士
+
+快捷键：选中选框后，可以使用键盘 方向键 进行 1 像素微调，按住 Shift + 方向键 可进行 10 像素快速移动。
+
+重置：如果想完全重新开始，点击右上角的 “刷新” 图标。
+</details>
+
+<details>
+<summary>🧬 2. qPCR 高效排版助手</summary>
+
+🧬 qPCR 智能排版工具操作指南
+
+欢迎使用 qPCR Smart Layout。本工具专为分子生物学实验设计，旨在通过智能算法优化 96 孔板布局，提升 8 联管加样效率，并自动计算配液体系。
+
+1. 快速入门：配置你的实验
+
+在左侧的“配置中心”面板中，你可以定义实验的核心参数：
+
+输入引物与样本：
+
+引物清单：输入你本次实验涉及的基因（如 Gapdh, Target 1）。
+
+样本清单：输入你的样本编号（如 S1, S2, S3）。
+
+输入方式：你可以直接键入并使用“逗号”或“回车”分隔，也可以点击右侧的 “+” 按钮 快速添加。
+
+设置复孔数 (n)：
+
+通常设置为 3。
+
+选择排版优先级：
+
+引物集中：同一组引物的复孔会排在一起，适合先加引物 Master Mix 的操作。
+
+样本集中：同一组样本的复孔会排在一起，适合先铺样本模板的操作。
+
+2. 智能方向算法 (Smart Orientation)
+
+这是本工具的核心特色。为了优化 8 联管 的孔位利用率，系统会根据复孔数 $n$ 自动决策：
+
+纵向排列：当 $n$ 为 2、4 或 8 时，系统默认竖向排布。这样你可以用 8 联管一次性处理 4 组、2 组或 1 组实验，不留断位。
+
+横向排列：当 $n$ 为 3 或 6 时，系统默认横向排布。这样在 12 列的板子中，每行可以完美放下 4 组或 2 组实验，板面更整齐。
+
+3. 进阶操作：多选与批量编辑
+
+你可以手动打破系统的默认排版：
+
+多选操作：
+
+按住键盘上的 Ctrl (Windows) 或 Command (Mac) 键，点击多个孔位。
+
+批量旋转：选中多组后，点击孔板上方的 “横向”或“竖向” 按钮，所有选中的实验组会同步旋转。
+
+取消选中：点击孔板中的空白区域或空白孔位，即可清空所有选中状态。
+
+4. 结构化拖拽交换
+
+如果你想手动调整某几个组的位置：
+
+选中组：点击一个或多个复孔组。
+
+按住并拖动：鼠标按住选中区域中的任意一个孔进行拖拽。
+
+智能对调：将“大块”放置到目标位置，系统会保持内部横纵结构不变，并与目标区域进行整体对调。
+
+提示：如果拖拽的目标位置会导致孔位超出 96 孔板边界，操作将自动取消。
+
+5. 体系配制与损耗计算
+
+在下方“体系配制”面板中，你可以：
+
+自定义组分：修改 Master Mix、引物、DNA 的单孔用量。
+
+设置损耗余量：默认为 10%。
+
+自动合算：在板图下方会生成 “体系指南”。它会根据当前引物覆盖的总孔数，自动乘上损耗系数，告诉你最准确的配液总量。
+
+6. 异常处理与导出
+
+板位不足警告：如果你的实验规模超过 96 孔，或者手动旋转导致空间不足，板图上方会出现红色报警，提示有多少组未能放下。
+
+物理中心化：系统会自动将加样区放在孔板的正中央，以规避 PCR 仪的“边缘效应”，提升数据稳定性。
+
+导出 SVG：点击 “导出 SVG” 按钮，可下载高清矢量图。该图片背景透明，文字清晰，非常适合直接放入实验报告、PPT 等。
+
+初始化方案：点击红色图标按钮，可重置排版方向和策略，但会保留你辛苦输入的引物和样本名。
+</details>
+
+<details>
+<summary>📈 3. qPCR 数据分析助手</summary>
+
+🔬 qPCR 数据分析系统使用指南
+欢迎使用本工具。本系统采用国际公认的 2^{-\Delta\Delta Ct} 相对定量法，集成了数据清洗检测、T-test 显著性分析以及科研可视化功能。
+阶段一：数据准备（至关重要）
+为了确保工具能够正确解析您的数据，请在上传 Excel 表格前进行以下简单的预处理：
+1.	清理杂质： 必须删除实验结果以外的所有内容（如机器导出的文件头、实验参数、空白行等）。
+2.	表头格式： 确保表格的第一行即为属性名称（如 Sample, Gene, Ct）。
+3.	原始数据： 建议保留所有技术重复孔（Technical Replicates）的原始 Ct 值，而不是只提供平均值。这样系统才能自动为您计算 P 值和误差棒。
+________________________________________
+阶段二：配置与分析步骤
+1. 上传文件
+•	点击页面顶部的“📂 上传 Excel”区域，或直接将您的 .xlsx / .xls 文件拖拽进去。
+•	上传成功后，系统会自动展开“参数配置”面板。
+2. 建立映射关系
+在下拉菜单中指定数据所在的列：
+•	样本列： 选择包含样本名称（如 Control, Treatment1）的列。
+•	基因列： 选择包含基因名称（如 GAPDH, Target_Gene）的列。
+•	Ct 值列： 选择包含原始数字的 Ct 值列。
+3. 设定统计基准
+•	内参基因： 在列表中选择您的管家基因（支持多选，系统将取几何平均值校准）。
+•	对照组： 选择一个样本作为“基准”（通常是 NC 或 Control 组），其表达量将被定义为 1。
+•	分析样本： 默认全选。如只需展示部分数据，可手动勾选。
+4. 统计预警设置
+•	Ct SD 阈值： 默认值为 0.5。如果某组平行孔的 Ct 值标准差超过此值，系统会判定数据波动较大并标红提醒。
+________________________________________
+阶段三：结果解读与导出
+点击 “🚀 执行统计分析” 后，您将看到以下内容：
+1. 结果表格
+表格详细列出了每一组数据的核心指标：
+•	原始 Ct 序列： 展示同一组的三个孔（或两个孔）的数值，方便回溯。
+•	Ct SD： 衡量加样稳定性。若表格背景变红，说明该组 Ct 波动较大。
+•	Fold Change： 2^{-\Delta\Delta Ct} 结果，即相对表达量。
+•	P-value： 基于 T-test 计算的统计学差异，自动识别显著性（* p<0.05 等）。
+2. 可视化柱状图
+•	误差棒 (Error Bar)： 展示 Fold Change 的标准差。
+•	显著性标注： 自动在柱状图顶部标注星号（*）。
+•	坐标切换： 您可以在配置区实时切换“按样本”或“按基因”分组，寻找最佳展示视角。
+3. 数据导出
+•	导出 CSV： 获得包含所有统计细节的表格。
+•	下载图片： 获得高清 PNG 格式图表，可直接用于组会汇报或初步草稿。
+</details>
+
+---
+> **隐私提示**：本站所有计算均在浏览器本地完成，数据绝不上传服务器。`
+            }
+        };
+
         function openTool(url, toolName) {
-            title.innerText = toolName.toUpperCase() + " // 进行中...";
+            container.style.display = 'block';
+            textLayer.style.display = 'none';
+            title.innerText = toolName.toUpperCase() + " // INITIALIZING...";
             container.src = url;
             overlay.style.display = 'flex';
             document.body.style.overflow = 'hidden';
+        }
+
+        function showInfo(type) {
+            const data = siteData[type];
+            container.style.display = 'none';
+            textLayer.style.display = 'block';
+            title.innerText = data.title;
+            innerContent.innerHTML = marked.parse(data.content);
+            overlay.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function toggleDonate() {
+            const area = document.getElementById('donate-area');
+            const btn = document.querySelector('.donate-trigger span');
+            if (area.style.display === 'none' || area.style.display === '') {
+                area.style.display = 'block';
+                btn.innerText = "收起赞赏码";
+            } else {
+                area.style.display = 'none';
+                btn.innerText = "🥤 请作者喝瓶快乐水";
+            }
         }
 
         function closeTool() {
             overlay.style.display = 'none';
             container.src = '';
             document.body.style.overflow = 'auto';
+            
+            // 重置赞赏码
+            const donateArea = document.getElementById('donate-area');
+            const donateBtn = document.querySelector('.donate-trigger span');
+            if (donateArea) donateArea.style.display = 'none';
+            if (donateBtn) donateBtn.innerText = "🥤 请作者喝瓶快乐水";
+
+            // --- 新增：重置所有折叠框 ---
+            const details = document.querySelectorAll('details');
+            details.forEach(d => d.removeAttribute('open'));
         }
 
         window.addEventListener('keydown', (e) => {
