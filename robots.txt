@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Allow: /assets/
+Disallow: /private/
+
+# 告诉爬虫你的站点地图位置
+Sitemap: https://cyanhelix.unwedomain.xyz/sitemap.xml
