@@ -1,5 +1,6 @@
 # CyanHelix Terminal 🧬
 **An All-in-One Online Suite for Biological Research & Experiment Analysis**
+<img width="1484" height="1151" alt="image" src="https://github.com/user-attachments/assets/2b98a458-8457-4fb1-bcfd-208470604088" />
 
 CyanHelix is a professional, web-based platform designed to simplify data processing and experimental design for molecular biologists. From qPCR layout planning to Western Blot quantification, we provide the tools to make your lab life more efficient.
 
