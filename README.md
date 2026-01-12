@@ -16,6 +16,8 @@ CyanHelix is a professional, web-based platform designed to simplify data proces
 * **Auto-Detection:** Intelligent protein band detection from your blot images.
 * **TIFF Support:** High-resolution image processing for accurate quantification.
 * **Interactive Adjustments:** Manually refine bands for the most precise data.
+* <img width="2102" height="1156" alt="image" src="https://github.com/user-attachments/assets/1419c3f4-3743-4561-be80-736983770e32" />
+
 
 ### 📊 [qPCR Data Analyzer](https://qpcr.unwedomain.xyz/)
 * **Fast Processing:** Calculate relative gene expression (Delta Delta Ct) in seconds.
