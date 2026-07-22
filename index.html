@@ -13,8 +13,8 @@
     <script src="https://cdn.jsdelivr.net/npm/leancloud-storage@4.12.0/dist/av-min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="CyanHelix 是专为生物医学研究者设计的在线辅助平台。提供 qPCR 自动分析、Western Blot 蛋白条带定量、qPCR排版设计等实验室常用工具，简化科研数据处理流程。">
-    <meta name="keywords" content="CyanHelix, 生物实验工具, qPCR分析, Western Blot, 调内参，qPCR排版，实验室计算器, 分子生物学，实验室树洞">
+    <meta id="meta-description" name="description" content="CyanHelix 是专为生物医学研究者设计的在线辅助平台。提供 qPCR 自动分析、Western Blot 蛋白条带定量、qPCR排版设计等实验室常用工具，简化科研数据处理流程。">
+    <meta id="meta-keywords" name="keywords" content="CyanHelix, 生物实验工具, qPCR分析, Western Blot, 调内参，qPCR排版，实验室计算器, 分子生物学，实验室树洞">
     <title>CyanHelix | 生物学实验辅助分析工具 - qPCR, Western Blot & lab tree-hole</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
@@ -64,6 +64,13 @@
 
         header { margin-bottom: 4rem; }
         .header-main { display: flex; align-items: center; gap: 25px; }
+        .header-copy { flex: 1; }
+        .language-switcher { display: inline-flex; flex: 0 0 auto; align-self: flex-start; overflow: hidden; border: 1px solid var(--glass-border); border-radius: 8px; background: rgba(6, 22, 28, 0.72); }
+        .language-button { min-width: 48px; padding: 8px 10px; border: 0; border-right: 1px solid var(--glass-border); background: transparent; color: var(--text-dim); font: inherit; font-size: 0.8rem; font-weight: 800; line-height: 1; cursor: pointer; transition: background 0.2s ease, color 0.2s ease; }
+        .language-button:last-child { border-right: 0; }
+        .language-button:hover { color: var(--text-main); background: rgba(34, 211, 238, 0.1); }
+        .language-button[aria-pressed="true"] { color: #042f2e; background: var(--secondary-accent); }
+        .language-button:focus-visible { outline: 2px solid white; outline-offset: -2px; }
         .logo-img { height: 80px; filter: drop-shadow(0 0 15px rgba(6,182,212,0.5)); }
         header h1 { font-size: 3rem; font-weight: 800; margin: 0; letter-spacing: -1.5px; background: linear-gradient(to bottom right, #ffffff, var(--primary-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         header p { color: var(--text-dim); font-size: 1.1rem; margin-top: 15px; }
@@ -79,7 +86,9 @@
         .info-card { background: rgba(6, 22, 28, 0.4); }
 
         #iframe-overlay { position: fixed; inset: 0; background: rgba(2, 6, 23, 0.95); backdrop-filter: blur(20px); z-index: 1000; display: none; flex-direction: column; animation: fadeIn 0.4s ease; }
-        #iframe-header { padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; background: rgba(8, 51, 68, 0.5); border-bottom: 1px solid var(--glass-border); }
+        #iframe-header { padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; background: rgba(8, 51, 68, 0.5); border-bottom: 1px solid var(--glass-border); }
+        .overlay-actions { display: flex; align-items: center; gap: 0.75rem; }
+        #iframe-header .language-switcher { align-self: auto; }
         #iframe-container { flex: 1; width: 100%; border: none; background: white; }
         #text-content-layer { flex: 1; overflow-y: auto; padding: 3rem 2rem; display: none; }
         
@@ -104,6 +113,7 @@
         footer { margin-top: 8rem; text-align: center; color: var(--text-dim); font-size: 0.85rem; letter-spacing: 1px; }
 
         @media (max-width: 900px) { .bento-grid { grid-template-columns: 1fr; grid-auto-rows: auto; } .large { grid-column: span 1; } }
+        @media (max-width: 640px) { .content-wrapper { padding: 3rem 1.25rem; } .header-main { align-items: flex-start; gap: 16px; } .logo-img { height: 56px; } header h1 { font-size: 2rem; } header p { font-size: 1rem; } .language-switcher { position: absolute; top: 1.25rem; right: 1.25rem; } .header-copy { padding-right: 0; } #iframe-header { padding: 1rem; gap: 0.75rem; } #tool-title { min-width: 0; overflow-wrap: anywhere; } .overlay-actions { gap: 0.5rem; } #iframe-header .language-switcher { position: static; } #iframe-header .language-button { min-width: 40px; padding: 8px 7px; } .close-btn { flex: 0 0 auto; padding: 8px 12px; } }
         
         /* 树洞卡片样式 */
         .treehole-card { border-style: dashed; background: linear-gradient(135deg, rgba(10, 25, 30, 0.8), rgba(88, 28, 135, 0.1)); }
@@ -122,10 +132,16 @@
 
     <div class="top-glow"></div>
 
-    <div id="iframe-overlay">
+        <div id="iframe-overlay">
         <div id="iframe-header">
             <span id="tool-title" style="font-weight: bold; letter-spacing: 1px; color: var(--secondary-accent);">TERMINAL // LOADING...</span>
-            <button class="close-btn" onclick="closeTool()">退出 [ESC]</button>
+            <div class="overlay-actions">
+                <div class="language-switcher" role="group" aria-label="Language selector" data-i18n-aria-label="languageSelector">
+                    <button class="language-button" type="button" data-language="zh" aria-pressed="true" aria-label="切换到中文">中文</button>
+                    <button class="language-button" type="button" data-language="en" aria-pressed="false" aria-label="Switch to English">EN</button>
+                </div>
+                <button class="close-btn" type="button" data-i18n="close" onclick="closeTool()">退出 [ESC]</button>
+            </div>
         </div>
         <iframe id="iframe-container" src=""></iframe>
         <div id="text-content-layer">
@@ -137,49 +153,53 @@
         <header>
             <div class="header-main">
                 <img src="logo.png" alt="CyanHelix Logo" class="logo-img">
-                <div>
+                <div class="header-copy">
                     <h1>CyanHelix <span style="color: var(--primary-accent);">Terminal</span></h1>
-                    <p>基于数字化的实验室高效终端，专注于蛋白印迹定量与 PCR 数据自动化分析。</p>
+                    <p data-i18n="subtitle">基于数字化的实验室高效终端，专注于蛋白印迹定量与 PCR 数据自动化分析。</p>
+                </div>
+                <div class="language-switcher" role="group" aria-label="Language selector" data-i18n-aria-label="languageSelector">
+                    <button class="language-button" type="button" data-language="zh" aria-pressed="true" aria-label="切换到中文">中文</button>
+                    <button class="language-button" type="button" data-language="en" aria-pressed="false" aria-label="Switch to English">EN</button>
                 </div>
             </div>
         </header>
 
         <main class="bento-grid">
-            <div class="tool-card large" onclick="openTool('https://wb.unwedomain.xyz/', 'WB 条带定量助手')">
+            <div class="tool-card large" onclick="openTool('wb')">
                 <div>
                     <div class="icon-box">📊</div>
-                    <h3>WB 条带定量助手</h3>
-                    <p>蛋白印迹灰度值标准化计算工具，简化灰度值分析步骤，一键解放生产力。</p>
+                    <h3 data-i18n="wbTitle">WB 条带定量助手</h3>
+                    <p data-i18n="wbDescription">蛋白印迹灰度值标准化计算工具，简化灰度值分析步骤，一键解放生产力。</p>
                 </div>
-                <div class="tag">专注条带定量</div>
+                <div class="tag" data-i18n="wbTag">专注条带定量</div>
             </div>
 
-            <div class="tool-card" onclick="openTool('https://qpcr-plate-designer.unwedomain.xyz/', 'qPCR 布板工具')">
+            <div class="tool-card" onclick="openTool('plate')">
                 <div>
                     <div class="icon-box">🧬</div>
-                    <h3>qPCR 高效排版助手</h3>
-                    <p>自动化 96孔板排布规划器，自动计算体系组分，高效规避手工布板误差。</p>
+                    <h3 data-i18n="plateTitle">qPCR 高效排版助手</h3>
+                    <p data-i18n="plateDescription">自动化 96孔板排布规划器，自动计算体系组分，高效规避手工布板误差。</p>
                 </div>
-                <div class="tag">快速排版</div>
+                <div class="tag" data-i18n="plateTag">快速排版</div>
             </div>
 
-            <div class="tool-card" onclick="openTool('https://qpcr.unwedomain.xyz/', 'qPCR 表达分析工具')">
+            <div class="tool-card" onclick="openTool('analysis')">
                 <div>
                     <div class="icon-box">📈</div>
-                    <h3>qPCR 数据分析助手</h3>
-                    <p>Ct 值快速计算与标准化分析系统，支持多内参校准。</p>
+                    <h3 data-i18n="analysisTitle">qPCR 数据分析助手</h3>
+                    <p data-i18n="analysisDescription">Ct 值快速计算与标准化分析系统，支持多内参校准。</p>
                 </div>
-                <div class="tag tag-green">即时计算</div>
+                <div class="tag tag-green" data-i18n="analysisTag">即时计算</div>
             </div>
 
             <div class="tool-card treehole-card" onclick="openTreehole()">
                 <div>
                     <div class="icon-box" style="background: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.3);">🕳️</div>
-                    <h3>科研树洞</h3>
+                    <h3 data-i18n="treeholeTitle">科研树洞</h3>
                   
                 </div>
                 <div class="treehole-footer">
-                    <div class="tag" style="background: rgba(168, 85, 247, 0.1); color: #a855f7;">吐槽/交流（可匿名）</div>
+                    <div class="tag" data-i18n="treeholeTag" style="background: rgba(168, 85, 247, 0.1); color: #a855f7;">吐槽/交流（可匿名）</div>
                     
                 </div>
             </div>
@@ -187,8 +207,8 @@
             <div class="tool-card info-card" onclick="showInfo('manual')">
                 <div>
                     <div class="icon-box" style="font-size: 1.2rem; width: 44px; height: 44px;">📖</div>
-                    <h3>使用说明</h3>
-                    <p>快速上手指南：点击查看各个核心模块的详细操作步骤。</p>
+                    <h3 data-i18n="manualTitle">使用说明</h3>
+                    <p data-i18n="manualDescription">快速上手指南：点击查看各个核心模块的详细操作步骤。</p>
                 </div>
                 <div class="tag">GUIDE</div>
             </div>
@@ -196,21 +216,22 @@
             <div class="tool-card info-card" onclick="showInfo('about')">
                 <div>
                     <div class="icon-box" style="font-size: 1.2rem; width: 44px; height: 44px;">👤</div>
-                    <h3>关于本站</h3>
-                    <p>了解 CyanHelix Terminal 的开发初衷与技术架构。</p>
+                    <h3 data-i18n="aboutTitle">关于本站</h3>
+                    <p data-i18n="aboutDescription">了解 CyanHelix Terminal 的开发初衷与技术架构。</p>
                 </div>
                 <div class="tag">ABOUT</div>
             </div>
         </main>
 
-        <footer>
+        <footer data-i18n="footer">
             All rights reserved by Zhang Shuang // © 2026 CyanHelix Terminal
         </footer>
     </div>
 
     <script>
-        // --- 1. 数据配置 ---
+        // User-facing content is separated from tool behavior so both locales use the same URLs and actions.
         const siteData = {
+            zh: {
             about: {
                 title: "ABOUT // 关于本站",
                 content: `
@@ -471,31 +492,310 @@ ________________________________________
 ---
 > **隐私提示**：本站所有计算均在浏览器本地完成，数据绝不上传服务器。`
             }
+            },
+            en: {
+                about: {
+                    title: "ABOUT // CYANHELIX",
+                    content: `
+## Project background
+**CyanHelix Terminal** is an open-source project I built with AI-assisted tools in my spare time. It provides efficient, practical digital tools for cell and molecular biology workflows, including Western blot densitometry and qPCR data analysis. More laboratory utilities will be added over time to help researchers work more efficiently.
+
+---
+
+### Support the project
+The tools are intended to remain free of charge and without feature restrictions for biology and biomedical graduate students while the service is operating. Support is appreciated from commercial users and those in a position to contribute.
+
+<button class="donate-trigger" onclick="toggleDonate()">
+    <span>🥤 Buy the author a drink</span>
+</button>
+
+<div id="donate-area">
+    <img src="donate.png" alt="Donation QR code">
+    <p style="font-size: 0.8rem; opacity: 0.7;">Thank you for your support.</p>
+</div>
+
+---
+
+## Technical support
+- **Source control**: GitHub`
+                },
+                manual: {
+                    title: "MANUAL // USER GUIDE",
+                    content: `
+# 🧬 Module guides
+Open a section below for detailed instructions.
+
+<details>
+<summary>📊 1. Western Blot Band Quantification Assistant</summary>
+
+## Quick-start guide
+This tool is designed for biomedical laboratories. With simple click-and-drag controls, it helps you quantify Western blot band intensity and calculate suggested loading volumes for a subsequent experiment.
+
+### Step 1: Prepare and upload an image
+1. **Recommended image specifications**
+   - **Formats:** .jpg, .png, and laboratory-standard .tif / .tiff files are supported.
+   - **Resolution:** Optimized for high-resolution 600 DPI scans.
+   - **Bit depth:** Supports 8-bit images, the most common format.
+
+   If a particular TIFF cannot be opened because of its scientific encoding, save it as a standard PNG in ImageJ first.
+
+2. **Upload the image**
+   Select **Upload Image** in the upper-right corner. After upload, the image automatically fits the available screen width.
+
+### Step 2: Image preprocessing (optional)
+Use the top toolbar when the source image is too dark or has insufficient contrast:
+- **Brightness / Contrast:** Move the sliders to improve visibility of faint bands. These controls affect the display only and do not alter the intensity values used for densitometry.
+- **Zoom:** Use the + / - controls or the percentage display to zoom in for precise selection.
+
+### Step 3: Background subtraction (essential)
+Subtract the background before quantifying samples; otherwise, membrane background noise will be included in the calculation.
+1. Click and drag in a blank image area that contains no band to draw a region of interest (ROI).
+2. Select the ROI so that it is highlighted in blue.
+3. Select the blue **Set as Background** control above the canvas.
+4. The ROI changes to a yellow dashed outline and is identified as the background reference in the side panel.
+
+### Step 4: Select and analyze bands
+1. **Create sample ROIs**
+   - Drag over a band to create a new ROI.
+   - A live 2x magnifier appears in the upper-left corner while dragging or resizing to help align ROI edges.
+   - To enforce identical ROI dimensions, enable **Fixed Size** in the side panel and enter the width and height in pixels.
+2. **Adjust an ROI**
+   - Drag the centre of an ROI to move it.
+   - Drag a corner to resize it.
+   - Select the red trash icon in the upper-right of an ROI to delete it.
+3. **Synchronize ROI areas**
+   If you created ROIs with different dimensions, select **Synchronize ROI Areas** at the bottom of the side panel. The tool resizes all ROIs to the dimensions of the reference ROI.
+
+### Step 5: Quantification logic
+1. **Set a reference**
+   A loading control or experimental control is commonly set to 1. Select the intended band, then choose **Set as Reference** in the side panel. The reference band turns green.
+2. **Enter the current loading volume**
+   In the **Current Loading (uL)** field, enter the volume actually loaded for that lane.
+3. **Review the recommendation**
+   The tool calculates:
+
+   Suggested next loading volume = current loading volume x (target intensity / current intensity)
+
+   **Reference mode** aligns every band with the selected reference band. **Fixed-value mode** lets you enter a target intensity, such as 100, and aligns all bands with that value.
+
+### Step 6: Export a report
+Select **Export Data Report (CSV)** at the bottom of the side panel. The resulting spreadsheet can be opened in Excel and includes the sample index, mean grayscale value, background-subtracted net intensity, and suggested loading volume.
+
+### Tips
+- With an ROI selected, use the arrow keys for 1-pixel adjustments; hold Shift with an arrow key for 10-pixel adjustments.
+- To restart completely, select the refresh icon in the upper-right corner.
+</details>
+
+<details>
+<summary>🧬 2. qPCR Plate Layout Assistant</summary>
+
+## qPCR Smart Layout guide
+qPCR Smart Layout uses an algorithmic 96-well plate layout to improve multichannel pipetting efficiency and automatically calculate reagent volumes.
+
+### 1. Configure the experiment
+In the **Configuration** panel, define the core experimental inputs:
+- **Primer list:** Enter the genes in the experiment, for example Gapdh or Target 1.
+- **Sample list:** Enter sample identifiers, for example S1, S2, and S3.
+- Separate items with commas or line breaks, or use the + control to add them.
+- **Replicates (n):** Three technical replicates is a common choice.
+- **Layout priority:** Choose **Primer-focused** to group replicate wells by primer for master-mix dispensing, or **Sample-focused** to group them by sample for template dispensing.
+
+### 2. Smart orientation
+To optimize 8-tube strip use, the layout direction is selected automatically from the replicate count n:
+- **Vertical:** Used by default for n = 2, 4, or 8, enabling 4, 2, or 1 complete experimental groups per 8-tube strip without gaps.
+- **Horizontal:** Used by default for n = 3 or 6, fitting 4 or 2 complete groups per row of a 12-column plate.
+
+### 3. Multi-select and batch editing
+You can override the default layout:
+- Hold Ctrl (Windows) or Command (macOS) while selecting wells to select multiple replicate groups.
+- After selecting groups, use **Horizontal** or **Vertical** above the plate to rotate all selected groups together.
+- Select an empty well or area of the plate to clear the selection.
+
+### 4. Structured drag-and-drop exchange
+To reposition groups manually:
+1. Select one or more replicate groups.
+2. Hold and drag from any selected well.
+3. Drop the block at the desired position. The tool preserves its internal orientation and exchanges it with the destination area as a whole.
+
+If the target would place wells beyond the 96-well plate boundary, the action is cancelled automatically.
+
+### 5. Reaction setup and excess calculation
+In the **Reaction Setup** panel, you can:
+- Set per-well volumes for master mix, primers, and DNA template.
+- Set an excess allowance, which defaults to 10%.
+- Review the automatically calculated setup guide below the plate. It multiplies the number of wells assigned to each primer by the excess factor to give the required preparation volume.
+
+### 6. Warnings and export
+- **Capacity warning:** If the experiment exceeds 96 wells or manual rotation leaves insufficient space, a red warning reports the number of groups that could not be placed.
+- **Physical centering:** The tool centres the dispensing area on the plate to help reduce PCR instrument edge effects and improve data consistency.
+- **Export SVG:** Download a high-resolution transparent vector image suitable for reports and presentations.
+- **Reset layout:** The red icon restores the default orientation and strategy while retaining entered primer and sample names.
+</details>
+
+<details>
+<summary>📈 3. qPCR Expression Analysis Assistant</summary>
+
+## qPCR data-analysis guide
+This tool uses the widely accepted 2^-DeltaDeltaCt method for relative quantification and includes data-quality checks, Student's t-test significance analysis, and publication-oriented visualizations.
+
+### Stage 1: Prepare the data
+Before uploading an Excel file, prepare it as follows:
+1. **Remove non-data content:** Delete instrument-export headers, experimental parameters, blank rows, and any content outside the results table.
+2. **Use a header row:** The first row must contain column names such as Sample, Gene, and Ct.
+3. **Keep raw technical replicates:** Upload individual Ct values rather than only group means. This enables the tool to calculate p-values and error bars.
+
+### Stage 2: Configure and analyze
+1. **Upload a file:** Select **Upload Excel** at the top of the page, or drag in an .xlsx or .xls file. The parameter panel opens after a successful upload.
+2. **Map columns:** In the dropdowns, select the sample-name column, gene-name column, and numeric Ct column.
+3. **Set statistical references:**
+   - Select one or more **housekeeping genes**. When multiple genes are selected, their geometric mean is used for normalization.
+   - Select the **control group**, usually an NC or control sample; its expression level is defined as 1.
+   - Select the samples to analyze. All samples are selected by default.
+4. **Set the Ct SD threshold:** The default is 0.5. A replicate group with a Ct standard deviation above this value is flagged in red as potentially variable.
+
+### Stage 3: Interpret and export results
+After selecting **Run Statistical Analysis**, the tool provides:
+1. **Results table**
+   - The raw Ct values for each replicate group.
+   - **Ct SD**, an indicator of pipetting and replicate consistency; red highlighting indicates high Ct variability.
+   - **Fold Change**, the 2^-DeltaDeltaCt relative-expression result.
+   - **P-value**, calculated by t-test, with automatic significance labels such as * p < 0.05.
+2. **Bar chart**
+   - Error bars show the standard deviation of fold change.
+   - Asterisks above bars indicate statistical significance.
+   - Switch grouping by sample or by gene in the configuration panel to select the clearest display.
+3. **Data export**
+   - Export CSV to obtain all statistical details.
+   - Download a high-resolution PNG chart suitable for lab meetings or early manuscript drafts.
+</details>
+
+---
+> **Privacy notice:** All calculations run locally in your browser. Your data are never uploaded to a server.`
+                }
+            }
+        };
+
+        const translations = {
+            zh: {
+                languageSelector: "语言选择", close: "退出 [ESC]",
+                subtitle: "基于数字化的实验室高效终端，专注于蛋白印迹定量与 PCR 数据自动化分析。",
+                wbTitle: "WB 条带定量助手", wbDescription: "蛋白印迹灰度值标准化计算工具，简化灰度值分析步骤，一键解放生产力。", wbTag: "专注条带定量",
+                plateTitle: "qPCR 高效排版助手", plateDescription: "自动化 96孔板排布规划器，自动计算体系组分，高效规避手工布板误差。", plateTag: "快速排版",
+                analysisTitle: "qPCR 数据分析助手", analysisDescription: "Ct 值快速计算与标准化分析系统，支持多内参校准。", analysisTag: "即时计算",
+                treeholeTitle: "科研树洞", treeholeTag: "吐槽/交流（可匿名）",
+                manualTitle: "使用说明", manualDescription: "快速上手指南：点击查看各个核心模块的详细操作步骤。",
+                aboutTitle: "关于本站", aboutDescription: "了解 CyanHelix Terminal 的开发初衷与技术架构。",
+                footer: "All rights reserved by Zhang Shuang // © 2026 CyanHelix Terminal",
+                metaDescription: "CyanHelix 是专为生物医学研究者设计的在线辅助平台。提供 qPCR 自动分析、Western Blot 蛋白条带定量、qPCR排版设计等实验室常用工具，简化科研数据处理流程。",
+                metaKeywords: "CyanHelix, 生物实验工具, qPCR分析, Western Blot, 调内参，qPCR排版，实验室计算器, 分子生物学，实验室树洞",
+                pageTitle: "CyanHelix | 生物学实验辅助分析工具 - qPCR, Western Blot & lab tree-hole",
+                toolTitles: { wb: "WB 条带定量助手", plate: "qPCR 布板工具", analysis: "qPCR 表达分析工具", treehole: "科研树洞 // RESEARCHER ANONYMOUS" }
+            },
+            en: {
+                languageSelector: "Language selector", close: "Close [ESC]",
+                subtitle: "A digital laboratory workspace for Western blot densitometry and automated qPCR data analysis.",
+                wbTitle: "Western Blot Band Quantification", wbDescription: "Normalize Western blot densitometry values and streamline band-intensity analysis.", wbTag: "Band Densitometry",
+                plateTitle: "qPCR Plate Layout Assistant", plateDescription: "Plan 96-well qPCR plates, calculate reaction components, and reduce manual layout errors.", plateTag: "Plate Layout",
+                analysisTitle: "qPCR Expression Analysis", analysisDescription: "Analyze Ct values and relative expression with support for multiple housekeeping genes.", analysisTag: "Analyze Now",
+                treeholeTitle: "Researcher Forum", treeholeTag: "Discuss anonymously",
+                manualTitle: "User Guide", manualDescription: "Open detailed operating instructions for each core module.",
+                aboutTitle: "About CyanHelix", aboutDescription: "Learn about the purpose and technical foundation of CyanHelix Terminal.",
+                footer: "All rights reserved by Zhang Shuang // © 2026 CyanHelix Terminal",
+                metaDescription: "CyanHelix is an online laboratory toolkit for biomedical researchers, including qPCR analysis, Western blot band quantification, and qPCR plate-layout design.",
+                metaKeywords: "CyanHelix, biomedical research tools, qPCR analysis, Western blot densitometry, qPCR plate layout, molecular biology, laboratory tools",
+                pageTitle: "CyanHelix | Laboratory Tools for qPCR and Western Blot Analysis",
+                toolTitles: { wb: "Western Blot Band Quantification", plate: "qPCR Plate Layout", analysis: "qPCR Expression Analysis", treehole: "Researcher Forum // ANONYMOUS DISCUSSION" }
+            }
         };
 
 
       
 
-        // --- 3. 核心功能函数 ---
+        const toolUrls = {
+            wb: 'https://wb.unwedomain.xyz/',
+            plate: 'https://qpcr-plate-designer.unwedomain.xyz/',
+            analysis: 'https://qpcr.unwedomain.xyz/',
+            treehole: 'https://treehole.unwedomain.xyz/'
+        };
+        const languageStorageKey = 'cyanhelix-language';
+        let currentLanguage = 'zh';
+        let openInfoType = null;
+
+        function getInitialLanguage() {
+            const requestedLanguage = new URLSearchParams(window.location.search).get('lang');
+            if (requestedLanguage === 'zh' || requestedLanguage === 'en') return requestedLanguage;
+
+            try {
+                const savedLanguage = window.localStorage.getItem(languageStorageKey);
+                if (savedLanguage === 'zh' || savedLanguage === 'en') return savedLanguage;
+            } catch (error) {
+                // Private browsing or storage restrictions should not prevent use of the site.
+            }
+
+            return 'zh';
+        }
+
+        function setLanguage(language, { updateUrl = true } = {}) {
+            if (!translations[language]) return;
+
+            currentLanguage = language;
+            const copy = translations[language];
+            document.documentElement.lang = language === 'en' ? 'en' : 'zh-CN';
+            document.title = copy.pageTitle;
+            document.getElementById('meta-description').content = copy.metaDescription;
+            document.getElementById('meta-keywords').content = copy.metaKeywords;
+
+            document.querySelectorAll('[data-i18n]').forEach((element) => {
+                const key = element.dataset.i18n;
+                if (copy[key]) element.textContent = copy[key];
+            });
+            document.querySelectorAll('[data-i18n-aria-label]').forEach((element) => {
+                const key = element.dataset.i18nAriaLabel;
+                if (copy[key]) element.setAttribute('aria-label', copy[key]);
+            });
+            document.querySelectorAll('[data-language]').forEach((button) => {
+                const isActive = button.dataset.language === language;
+                button.setAttribute('aria-pressed', String(isActive));
+            });
+
+            try {
+                window.localStorage.setItem(languageStorageKey, language);
+            } catch (error) {
+                // The selected language remains active for this visit when storage is unavailable.
+            }
+
+            if (updateUrl) {
+                const url = new URL(window.location.href);
+                if (language === 'en') url.searchParams.set('lang', 'en');
+                else url.searchParams.delete('lang');
+                window.history.replaceState({}, '', url);
+            }
+
+            if (openInfoType) showInfo(openInfoType);
+        }
+
+        // --- 3. Core functions ---
         const overlay = document.getElementById('iframe-overlay');
         const container = document.getElementById('iframe-container');
         const textLayer = document.getElementById('text-content-layer');
         const innerContent = document.getElementById('inner-markdown-content');
         const title = document.getElementById('tool-title');
 
-        function openTool(url, toolName) {
+        function openTool(toolKey) {
             container.style.display = 'block';
             textLayer.style.display = 'none';
-            title.innerText = toolName.toUpperCase() + " // INITIALIZING...";
-            container.src = url;
+            openInfoType = null;
+            title.innerText = translations[currentLanguage].toolTitles[toolKey].toUpperCase() + " // INITIALIZING...";
+            container.src = toolUrls[toolKey] + (currentLanguage === 'en' ? '?lang=en' : '');
             overlay.style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
 
         function showInfo(type) {
-            const data = siteData[type];
+            const data = siteData[currentLanguage][type];
             container.style.display = 'none';
             textLayer.style.display = 'block';
+            openInfoType = type;
             title.innerText = data.title;
             innerContent.innerHTML = marked.parse(data.content);
             overlay.style.display = 'flex';
@@ -505,6 +805,7 @@ ________________________________________
         function closeTool() {
             overlay.style.display = 'none';
             container.src = '';
+            openInfoType = null;
             document.body.style.overflow = 'auto';
             if (document.getElementById('donate-area')) document.getElementById('donate-area').style.display = 'none';
         }
@@ -514,15 +815,14 @@ ________________________________________
             area.style.display = (area.style.display === 'none' || area.style.display === '') ? 'block' : 'none';
         }
 
-        // --- 4. 树洞集成逻辑 ---
+        // --- 4. Researcher forum integration ---
         function openTreehole() {
-            // 嵌入您最新部署的树洞网址
-            openTool('https://treehole.unwedomain.xyz/', '科研树洞 // RESEARCHER ANONYMOUS');
+            openTool('treehole');
         }
 
         async function fetchTreeholePreview() {
             try {
-                // Waline 的评论数据存储在 Comment 表中
+                // Waline stores comments in the Comment collection.
                 const query = new AV.Query('Comment'); 
                 query.descending('createdAt');
                 query.limit(1);
@@ -533,7 +833,7 @@ ________________________________________
 
                 if (results.length > 0) {
                     let content = results[0].get('comment');
-                    // 简单去除 HTML 标签以便预览
+                    // Strip HTML for the card preview.
                     content = content.replace(/<[^>]+>/g, '').substring(0, 40) + '...';
                     if (previewEl) previewEl.innerText = `“ ${content} ”`;
                 }
@@ -541,13 +841,17 @@ ________________________________________
                 const count = await query.count();
                 if (countEl) countEl.innerText = `${count} POSTS`;
             } catch (error) {
-                console.log('预览加载中或后端未就绪');
+                console.log('Researcher forum preview is unavailable.');
             }
         }
 
-        // --- 5. 事件监听 ---
+        // --- 5. Event listeners ---
         window.addEventListener('DOMContentLoaded', () => {
-            lucide?.createIcons();
+            setLanguage(getInitialLanguage(), { updateUrl: false });
+            document.querySelectorAll('[data-language]').forEach((button) => {
+                button.addEventListener('click', () => setLanguage(button.dataset.language));
+            });
+            window.lucide?.createIcons();
             fetchTreeholePreview();
         });
 
