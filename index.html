@@ -14,11 +14,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta id="meta-description" name="description" content="CyanHelix 是专为生物医学研究者设计的在线辅助平台。提供 qPCR 自动分析、Western Blot 蛋白条带定量、qPCR排版设计等实验室常用工具，简化科研数据处理流程。">
-    <meta id="meta-keywords" name="keywords" content="CyanHelix, 生物实验工具, qPCR分析, Western Blot, 调内参，qPCR排版，实验室计算器, 分子生物学，实验室树洞">
+    <meta id="meta-keywords" name="keywords" content="CyanHelix, 生物实验工具, qPCR分析, Western Blot定量, qPCR布板, 分子生物学, 实验室计算器">
+    <meta name="robots" content="index,follow">
+    <link id="canonical-url" rel="canonical" href="https://cyanhelix.unwedomain.xyz/">
+    <link rel="alternate" hreflang="zh-CN" href="https://cyanhelix.unwedomain.xyz/">
+    <link rel="alternate" hreflang="en" href="https://cyanhelix.unwedomain.xyz/?lang=en">
+    <link rel="alternate" hreflang="x-default" href="https://cyanhelix.unwedomain.xyz/">
+    <meta property="og:type" content="website">
+    <meta id="og-title" property="og:title" content="CyanHelix | 生物学实验辅助分析工具">
+    <meta id="og-description" property="og:description" content="面向生物医学研究者的在线实验工具：qPCR 分析、Western Blot 条带定量和 qPCR 布板设计。">
+    <meta id="og-url" property="og:url" content="https://cyanhelix.unwedomain.xyz/">
+    <meta property="og:image" content="https://cyanhelix.unwedomain.xyz/logo.png">
+    <meta name="twitter:card" content="summary">
     <title>CyanHelix | 生物学实验辅助分析工具 - qPCR, Western Blot & lab tree-hole</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" href="logo.png">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "CyanHelix",
+      "url": "https://cyanhelix.unwedomain.xyz/",
+      "description": "Online laboratory tools for qPCR analysis, Western blot quantification, and qPCR plate layout design.",
+      "inLanguage": ["zh-CN", "en"]
+    }
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
 
@@ -165,34 +186,34 @@
         </header>
 
         <main class="bento-grid">
-            <div class="tool-card large" onclick="openTool('wb')">
+            <a class="tool-card large" data-tool-link="wb" href="https://wb.unwedomain.xyz/" onclick="openTool('wb', event)">
                 <div>
                     <div class="icon-box">📊</div>
                     <h3 data-i18n="wbTitle">WB 条带定量助手</h3>
                     <p data-i18n="wbDescription">蛋白印迹灰度值标准化计算工具，简化灰度值分析步骤，一键解放生产力。</p>
                 </div>
                 <div class="tag" data-i18n="wbTag">专注条带定量</div>
-            </div>
+            </a>
 
-            <div class="tool-card" onclick="openTool('plate')">
+            <a class="tool-card" data-tool-link="plate" href="https://qpcr-plate-designer.unwedomain.xyz/" onclick="openTool('plate', event)">
                 <div>
                     <div class="icon-box">🧬</div>
                     <h3 data-i18n="plateTitle">qPCR 高效排版助手</h3>
                     <p data-i18n="plateDescription">自动化 96孔板排布规划器，自动计算体系组分，高效规避手工布板误差。</p>
                 </div>
                 <div class="tag" data-i18n="plateTag">快速排版</div>
-            </div>
+            </a>
 
-            <div class="tool-card" onclick="openTool('analysis')">
+            <a class="tool-card" data-tool-link="analysis" href="https://qpcr.unwedomain.xyz/" onclick="openTool('analysis', event)">
                 <div>
                     <div class="icon-box">📈</div>
                     <h3 data-i18n="analysisTitle">qPCR 数据分析助手</h3>
                     <p data-i18n="analysisDescription">Ct 值快速计算与标准化分析系统，支持多内参校准。</p>
                 </div>
                 <div class="tag tag-green" data-i18n="analysisTag">即时计算</div>
-            </div>
+            </a>
 
-            <div class="tool-card treehole-card" onclick="openTreehole()">
+            <a class="tool-card treehole-card" data-tool-link="treehole" href="https://treehole.unwedomain.xyz/" onclick="openTool('treehole', event)">
                 <div>
                     <div class="icon-box" style="background: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.3);">🕳️</div>
                     <h3 data-i18n="treeholeTitle">科研树洞</h3>
@@ -202,7 +223,7 @@
                     <div class="tag" data-i18n="treeholeTag" style="background: rgba(168, 85, 247, 0.1); color: #a855f7;">吐槽/交流（可匿名）</div>
                     
                 </div>
-            </div>
+            </a>
 
             <div class="tool-card info-card" onclick="showInfo('manual')">
                 <div>
@@ -689,6 +710,8 @@ After selecting **Run Statistical Analysis**, the tool provides:
                 metaDescription: "CyanHelix 是专为生物医学研究者设计的在线辅助平台。提供 qPCR 自动分析、Western Blot 蛋白条带定量、qPCR排版设计等实验室常用工具，简化科研数据处理流程。",
                 metaKeywords: "CyanHelix, 生物实验工具, qPCR分析, Western Blot, 调内参，qPCR排版，实验室计算器, 分子生物学，实验室树洞",
                 pageTitle: "CyanHelix | 生物学实验辅助分析工具 - qPCR, Western Blot & lab tree-hole",
+                ogTitle: "CyanHelix | 生物学实验辅助分析工具",
+                ogDescription: "面向生物医学研究者的在线实验工具：qPCR 分析、Western Blot 条带定量和 qPCR 布板设计。",
                 toolTitles: { wb: "WB 条带定量助手", plate: "qPCR 布板工具", analysis: "qPCR 表达分析工具", treehole: "科研树洞 // RESEARCHER ANONYMOUS" }
             },
             en: {
@@ -704,6 +727,8 @@ After selecting **Run Statistical Analysis**, the tool provides:
                 metaDescription: "CyanHelix is an online laboratory toolkit for biomedical researchers, including qPCR analysis, Western blot band quantification, and qPCR plate-layout design.",
                 metaKeywords: "CyanHelix, biomedical research tools, qPCR analysis, Western blot densitometry, qPCR plate layout, molecular biology, laboratory tools",
                 pageTitle: "CyanHelix | Laboratory Tools for qPCR and Western Blot Analysis",
+                ogTitle: "CyanHelix | Laboratory Tools for qPCR and Western Blot Analysis",
+                ogDescription: "Free browser-based tools for qPCR relative-expression analysis, Western blot densitometry, and qPCR plate layout design.",
                 toolTitles: { wb: "Western Blot Band Quantification", plate: "qPCR Plate Layout", analysis: "qPCR Expression Analysis", treehole: "Researcher Forum // ANONYMOUS DISCUSSION" }
             }
         };
@@ -744,6 +769,14 @@ After selecting **Run Statistical Analysis**, the tool provides:
             document.title = copy.pageTitle;
             document.getElementById('meta-description').content = copy.metaDescription;
             document.getElementById('meta-keywords').content = copy.metaKeywords;
+            document.getElementById('og-title').content = copy.ogTitle;
+            document.getElementById('og-description').content = copy.ogDescription;
+            document.getElementById('canonical-url').href = language === 'en'
+                ? 'https://cyanhelix.unwedomain.xyz/?lang=en'
+                : 'https://cyanhelix.unwedomain.xyz/';
+            document.getElementById('og-url').content = language === 'en'
+                ? 'https://cyanhelix.unwedomain.xyz/?lang=en'
+                : 'https://cyanhelix.unwedomain.xyz/';
 
             document.querySelectorAll('[data-i18n]').forEach((element) => {
                 const key = element.dataset.i18n;
@@ -756,6 +789,10 @@ After selecting **Run Statistical Analysis**, the tool provides:
             document.querySelectorAll('[data-language]').forEach((button) => {
                 const isActive = button.dataset.language === language;
                 button.setAttribute('aria-pressed', String(isActive));
+            });
+            document.querySelectorAll('[data-tool-link]').forEach((link) => {
+                const toolUrl = toolUrls[link.dataset.toolLink];
+                link.href = toolUrl + (language === 'en' ? '?lang=en' : '');
             });
 
             try {
@@ -781,7 +818,9 @@ After selecting **Run Statistical Analysis**, the tool provides:
         const innerContent = document.getElementById('inner-markdown-content');
         const title = document.getElementById('tool-title');
 
-        function openTool(toolKey) {
+        function openTool(toolKey, event) {
+            if (event && (event.metaKey || event.ctrlKey || event.shiftKey || event.button === 1)) return;
+            if (event) event.preventDefault();
             container.style.display = 'block';
             textLayer.style.display = 'none';
             openInfoType = null;
